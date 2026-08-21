@@ -45,14 +45,14 @@ class PostController extends Controller
     {
         //validate form
         $this->validate($request, [
-            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'title'     => 'required|min:5',
-            'content'   => 'required|min:10'
+            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'title'     => 'required|min:5|max:200',
+            'content'   => 'required|min:10|max:50000'
         ]);
 
         //upload image
         $image = $request->file('image');
-        $image->storeAs('public/posts', $image->hashName());
+        $image->storeAs('posts', $image->hashName(), 'public');
 
         //create post
         Post::create([
@@ -68,14 +68,11 @@ class PostController extends Controller
     /**
      * show
      * 
-     * @param mixed $id
+     * @param mixed $post
      * @return void
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        //get post by ID
-        $post = Post::find($id);
-
         //return view
         return view('posts.show', compact('post'));
     }
@@ -102,9 +99,9 @@ class PostController extends Controller
     {
         //validate form
         $this->validate($request, [
-            'image'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'title'     => 'required|min:5',
-            'content'   => 'required|min:10'
+            'image'     => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'title'     => 'required|min:5|max:200',
+            'content'   => 'required|min:10|max:50000'
         ]);
 
         //check if image is uploaded
